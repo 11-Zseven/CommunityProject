@@ -1,0 +1,5 @@
+github:
+  client:
+    id: Iv1.1417ff976c0c76e4
+    secret: 03ff8e32a8573fb35f887372704dd0653879b92c
+    redirectUri: http://localhost:8080/loginForGit
