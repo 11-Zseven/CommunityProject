@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.communityproject.mapper.UserMapper">
+    <!--  主键自增：useGeneratedKeys="true" keyProperty="user_id" -->
+    <insert id="insertUser" parameterType="com.lin.communityproject.entity.UserEntity" useGeneratedKeys="true" keyProperty="user_id">
+        insert into user(`id`,`name`,`token`,`avatar_url`,`create_time`,`modified_time`,`description`)
+        values(#{id},#{name},#{token},#{avatarUrl},#{createTime},#{modifiedTime},#{description});
+    </insert>
+    <update id="updateUser"  parameterType="com.lin.communityproject.entity.UserEntity">
+        update user
+        set name=#{name},avatar_url=#{avatarUrl},token=#{token},modified_time=#{modifiedTime},description=#{description}
+        where id=#{id};
+    </update>
+</mapper>

@@ -4,15 +4,40 @@
     <meta charset="UTF-8">
     <title>CommunityProject</title>
     <div th:include="common::bootstrapCS"></div>
-    <style type="text/css">
+    <!--  之后如果都有的话再放入common里面  -->
+    <link rel="stylesheet" href="css/community.css">
 
-    </style>
 </head>
 <body>
 
     <div th:replace="common::nav"> </div>
 
--->
+    <div class="container-fluid publish">
+        <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 pub-content" >
+                <h1><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现 </h1>
+                <hr>
+                <ul>
+                    <li>
+                        <div class="media foundLi">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object" style="width:40px;height: 40px" src="https://avatars.githubusercontent.com/u/96112575?v=4">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">Media heading</h4>
+                                something
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <h3>热门话题</h3>
 
+            </div>
+        </div>
+    </div>
 </body>
 </html>

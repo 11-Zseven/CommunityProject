@@ -1,19 +1,20 @@
-package com.lin.communityproject.dto;
+package com.lin.communityproject.entity;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 /**
  *@program: CommunityProject
  *@description:
  *@author: lin han
- *@date: 2022/09/03
+ *@date: 2022/09/04
  */
-public class GitHubUserDTO {
-    //对应库中githubId
-    private String id;
-    //主键  user_id
+@TableName("user")
+public class UserEntity {
+    @TableId(type = IdType.AUTO)
     private Integer userId;
-    //对应库中name
-    private String login;//name
+    private String id;//githubId
+    private String name;
     private String avatarUrl;
-    private String bio;
     private String token;
     private String createTime;
     private String modifiedTime;
@@ -24,29 +25,23 @@ public class GitHubUserDTO {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
     public String getId() {
         return id;
     }
     public void setId(String id) {
         this.id = id;
     }
-    public String getLogin() {
-        return login;
+    public String getName() {
+        return name;
     }
-    public void setLogin(String login) {
-        this.login = login;
+    public void setName(String name) {
+        this.name = name;
     }
-    public String getBio() {
-        return bio;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
-    public void setBio(String bio) {
-        this.bio = bio;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
     public String getToken() {
         return token;

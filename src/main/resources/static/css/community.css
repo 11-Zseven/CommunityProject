@@ -1,0 +1,17 @@
+body{
+    background-color:#e0e0e0;
+}
+.publish{
+    margin: 30px 50px;
+    background-color: white;
+}
+.pub-content{
+
+}
+.btn-publish{
+    float:right;
+    margin-bottom: 30px;
+}
+.foundLi{
+    list-style-type: none;
+}
