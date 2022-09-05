@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.lin.communityproject.dto.AccessTokenDTO;
+import com.lin.communityproject.dto.PageDTO;
 import com.lin.communityproject.dto.QuestionDTO;
 import com.lin.communityproject.dto.UserDTO;
 import com.lin.communityproject.service.QuestionService;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  *@date: 2022/09/03
  */
 @Controller
-public class AuthorizeController {
+public class IndexController {
 
     @Autowired
     private GithubUtils githubUtils;
@@ -77,8 +78,13 @@ public class AuthorizeController {
 //        return "index";//使用模板引擎的情况下，return "thymeleafName" 只是会使用该页面渲染浏览器页面，不会改变浏览器地址栏内容。要想改变，可以使用重定向。
     }
 
+    /**
+     * 访问主页面，分页显示帖子(注意设置默认值)
+     */
     @RequestMapping(value = {"/","/index"})
-    public String toIndex(HttpServletRequest request,Model model){
+    public String toIndex(HttpServletRequest request,Model model,
+                @RequestParam(value = "page",defaultValue = "1") Integer page,
+                @RequestParam(value = "size",defaultValue = "1") Integer size){
         //访问主页面，先判断cookie中是否有token值，并且判断和数据库中的是否一致，验证通过的话表示之前已经登陆过，无需重复登录
         List<Cookie> cookies = Arrays.asList(request.getCookies());
         List<Cookie> tokenList = cookies.stream().filter(one ->one.getName().equals("community_user_token")).collect(Collectors.toList());
@@ -89,10 +95,16 @@ public class AuthorizeController {
                 request.getSession().setAttribute("user",userByToken.get(0));
             }
         }
-
         //在访问主页的时候将所有的帖子查出来
-        List<QuestionDTO> questions = questionService.getAll();
-        model.addAttribute("questions",questions);
+//        List<QuestionDTO> questions = questionService.getAll();
+        //因为需要分页显示，因此需要根据传入的分页数据显示
+        if(page<1) page=1;
+        Integer total = questionService.getCount();
+        if(page>total) page=total;
+
+        List<QuestionDTO> questions=questionService.getQuesByPage(page,size);
+        PageDTO pageDTO = questionService.setPagination(questions, page, size, total);
+        model.addAttribute("pagination",pageDTO);
         return "index";
     }
 
