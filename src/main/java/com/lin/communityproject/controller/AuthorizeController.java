@@ -2,10 +2,13 @@ package com.lin.communityproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.lin.communityproject.dto.AccessTokenDTO;
-import com.lin.communityproject.dto.GitHubUserDTO;
+import com.lin.communityproject.dto.QuestionDTO;
+import com.lin.communityproject.dto.UserDTO;
+import com.lin.communityproject.service.QuestionService;
 import com.lin.communityproject.service.UserService;
 import com.lin.communityproject.utils.GithubUtils;
 
@@ -37,6 +40,9 @@ public class AuthorizeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private QuestionService questionService;
+
 
     /**
      * 获取到github返回的授权码code后发起post请求获取access_token，获取到用户信息
@@ -58,7 +64,7 @@ public class AuthorizeController {
         String accessToken = githubUtils.getAccessToken(accessTokenDTO);
 //        System.out.println(accessToken);//ghu_xXyfWBaYjwPaS0meQ1RcUuUE7jzxLE4XrcIs
         //根据token获取到github上的用户信息
-        GitHubUserDTO gitHubUser = githubUtils.getGitHubUser(accessToken);
+        UserDTO gitHubUser = githubUtils.getGitHubUser(accessToken);
         if(gitHubUser!=null){//获取到的github上的用户信息
             String token = userService.save(gitHubUser);
             //将token存入cookie,作为登录验证。
@@ -72,17 +78,21 @@ public class AuthorizeController {
     }
 
     @RequestMapping(value = {"/","/index"})
-    public String toIndex(HttpServletRequest request){
+    public String toIndex(HttpServletRequest request,Model model){
         //访问主页面，先判断cookie中是否有token值，并且判断和数据库中的是否一致，验证通过的话表示之前已经登陆过，无需重复登录
         List<Cookie> cookies = Arrays.asList(request.getCookies());
         List<Cookie> tokenList = cookies.stream().filter(one ->one.getName().equals("community_user_token")).collect(Collectors.toList());
         if(tokenList.size()!=0){
             String token = tokenList.get(0).getValue();
-            List<GitHubUserDTO> userByToken = userService.getUserByToken(token);
+            List<UserDTO> userByToken = userService.getUserByToken(token);
             if(userByToken.size()!=0){
                 request.getSession().setAttribute("user",userByToken.get(0));
             }
         }
+
+        //在访问主页的时候将所有的帖子查出来
+        List<QuestionDTO> questions = questionService.getAll();
+        model.addAttribute("questions",questions);
         return "index";
     }
 

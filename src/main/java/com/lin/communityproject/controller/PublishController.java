@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import com.lin.communityproject.dto.GitHubUserDTO;
+import com.lin.communityproject.dto.UserDTO;
 import com.lin.communityproject.dto.QuestionDTO;
 import com.lin.communityproject.service.QuestionService;
 
@@ -59,7 +59,7 @@ public class PublishController {
             String nowTime = sdf.format(new Date());
             questionDTO.setCreateTime(nowTime);
             questionDTO.setModifiedTime(nowTime);
-            GitHubUserDTO user = (GitHubUserDTO) request.getSession().getAttribute("user");
+            UserDTO user = (UserDTO) request.getSession().getAttribute("user");
             questionDTO.setCreator(user.getUserId());
             questionService.createQuestion(questionDTO);
             return "redirect:/";

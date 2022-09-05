@@ -23,7 +23,8 @@
                 </div>
                 <div class="form-group">
                     <label for="content">问题补充 (必填项)：</label>
-                    <textarea type="text" rows="7" class="form-control" id="content" name="content" th:value="${content}" placeholder="请输入......"> </textarea>
+                    <!--  注意：如果textarea使用 th:value的话不能实现回显显示数据  -->
+                    <textarea type="text" rows="7" class="form-control" id="content" name="content" th:text="${content}" placeholder="请输入......"> </textarea>
                     <p class="text-danger" th:if="${errorContent !=null}" th:text="${errorContent}"></p>
                 </div>
                 <div class="form-group">

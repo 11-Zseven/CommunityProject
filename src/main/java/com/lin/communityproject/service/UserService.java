@@ -1,20 +1,20 @@
 package com.lin.communityproject.service;
-import com.lin.communityproject.dto.GitHubUserDTO;
+import com.lin.communityproject.dto.UserDTO;
 
 import java.util.List;
 
 public interface UserService {
     /**
      * 保存/修改用户数据到数据库中
-     * @param gitHubUserDTO
+     * @param userDTO
      */
-    String save(GitHubUserDTO gitHubUserDTO);
+    String save(UserDTO userDTO);
 
-    GitHubUserDTO getUserByUserId(Integer userId);
+    UserDTO getUserByUserId(Integer userId);
 
-    GitHubUserDTO getUserByGithubId(String githubId);
+    UserDTO getUserByGithubId(String githubId);
 
-    List<GitHubUserDTO> getUserByToken(String token);
+    List<UserDTO> getUserByToken(String token);
 
 
 }

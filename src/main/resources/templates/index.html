@@ -17,21 +17,26 @@
             <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 pub-content" >
                 <h1><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现 </h1>
                 <hr>
-                <ul>
-                    <li>
-                        <div class="media foundLi">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img class="media-object" style="width:40px;height: 40px" src="https://avatars.githubusercontent.com/u/96112575?v=4">
-                                </a>
-                            </div>
-                            <div class="media-body">
-                                <h4 class="media-heading">Media heading</h4>
-                                something
-                            </div>
+                    <div class="media " th:each="question:${questions}">
+                        <div class="media-left">
+                            <a href="#">
+                                <!--thymeleaf中链接要用@{}-->
+                                <img class="media-object" style="width:40px;height: 40px"
+                                     th:src="${question.user.avatarUrl}"
+                                     src="https://avatars.githubusercontent.com/u/96112575?v=4">
+                            </a>
                         </div>
-                    </li>
-                </ul>
+                        <div class="media-body">
+                            <h4 class="media-heading"  th:text="${question.title}"></h4>
+                            <span class="count">
+                                ·<span th:text="${question.commentCount}"></span>人评论
+                                ·<span th:text="${question.viewCount}"></span>次阅览
+                                ·<span th:text="${question.likeCount}"></span>个点赞
+                                <!--   发布时间  时间戳  ${#dates.format(question.createTime, 'yyyy-MM-dd HH:mm')} (由于数据库中直接存了格式化的时间所以可以直接使用)-->
+                                <span th:text="${question.createTime}"></span>
+                            </span>
+                        </div>
+                    </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 <h3>热门话题</h3>

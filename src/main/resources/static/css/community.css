@@ -15,3 +15,8 @@ body{
 .foundLi{
     list-style-type: none;
 }
+.count{
+    font-size: 12px;
+    font-weight: normal;
+    color:#999;
+}

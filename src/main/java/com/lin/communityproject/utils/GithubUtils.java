@@ -4,14 +4,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import com.lin.communityproject.dto.AccessTokenDTO;
 import com.alibaba.fastjson.JSON;
-import com.lin.communityproject.dto.GitHubUserDTO;
+import com.lin.communityproject.dto.UserDTO;
 
-import java.awt.*;
 import java.io.IOException;
 /**
  *@program: CommunityProject
@@ -53,7 +50,7 @@ public class GithubUtils {
         return null;
     }
 
-    public GitHubUserDTO getGitHubUser(String accessToken){
+    public UserDTO getGitHubUser(String accessToken){
         OkHttpClient client=new OkHttpClient();
         Request request=new Request.Builder()
                 .url("https://api.github.com/user")
@@ -61,7 +58,8 @@ public class GithubUtils {
                 .build();
         try {
             Response response=client.newCall(request).execute();
-            return JSON.parseObject(response.body().string(),GitHubUserDTO.class);
+            //这里有个点注意：response.body中获取到的图像的key是：avatar_url,由于fastjson可以自动将下划线标识映射成驼峰的属性，所以可以直接转换（否则userdto的avatarUrl应该写成avatar_url）
+            return JSON.parseObject(response.body().string(), UserDTO.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
