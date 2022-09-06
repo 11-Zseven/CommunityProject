@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>CommunityProject</title>
     <div th:include="common::bootstrapCS"></div>
-    <!--  之后如果都有的话再放入common里面  -->
-    <link rel="stylesheet" href="css/community.css">
 
 </head>
 <body>
@@ -27,7 +25,9 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading"  th:text="${question.title}"></h4>
+                        <h4 class="media-heading" >
+                            <a th:href="@{'/question/detail/'+${question.id}}"><span th:text="${question.title}"></span></a>
+                        </h4>
                         <span class="count">
                             ·<span th:text="${question.commentCount}"></span>人评论
                             ·<span th:text="${question.viewCount}"></span>次阅览
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                <nav aria-label="Page navigation">
+                <nav aria-label="Page navigation" th:if="${pagination.questions!=null}">
                     <ul class="pagination">
                         <li th:if="${pagination.showFirstPage}">
                             <a th:href="@{'/index?page=1'}" aria-label="Previous">
@@ -46,7 +46,7 @@
                             </a>
                         </li>
                         <li th:if="${pagination.showPre}">
-                            <a th:href="@{'/?page='+${pagination.currentPage}}" aria-label="Previous">
+                            <a th:href="@{'/index?page='+${pagination.currentPage-1}}" aria-label="Previous">
                                 <span aria-hidden="true">&lt;</span>
                             </a>
                         </li>
@@ -54,7 +54,7 @@
                             <a th:href="@{'/index?page='+${page}}"  th:text="${page}"></a>
                         </li>
                         <li th:if="${pagination.showNext}">
-                            <a th:href="@{'/?page='+${pagination.currentPage+1}}" aria-label="Next">
+                            <a th:href="@{'/index?page='+${pagination.currentPage+1}}" aria-label="Next">
                                 <span aria-hidden="true">&gt;</span>
                             </a>
                         </li>

@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     //简单的语句使用注解，稍微复杂的就使用xml，结合使用。
-    @Select("select id,name,avatar_url,token,create_time,modified_time,description from user where user_id=#{id}")
+    @Select("select user_id,id,name,avatar_url,token,create_time,modified_time,description from user where user_id=#{id}")
     UserEntity getUserById(@Param("id")Integer id);
 
     @Select("select id,name,avatar_url,token,create_time,modified_time,description from user where id=#{githubId}")

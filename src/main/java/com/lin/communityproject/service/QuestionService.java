@@ -4,7 +4,7 @@ import com.lin.communityproject.dto.QuestionDTO;
 
 import java.util.List;
 public interface QuestionService {
-    void createQuestion(QuestionDTO questionDTO);
+    void saveQuestion(QuestionDTO questionDTO);
 
     List<QuestionDTO> getAll();
 
@@ -12,5 +12,11 @@ public interface QuestionService {
 
     Integer getCount();
 
+    Integer getCountByUserId(Integer userId);
+
     PageDTO setPagination(List<QuestionDTO> questions,Integer page,Integer size,Integer total);
+
+    PageDTO getMyQuestion(Integer userId,Integer page, Integer size);
+
+    QuestionDTO getQuesById(Integer id);
 }

@@ -16,9 +16,7 @@ import com.lin.communityproject.utils.GithubUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 /**
  *@program: CommunityProject
  *@description:
@@ -54,7 +52,6 @@ public class IndexController {
     @RequestMapping("/loginForGit")
     public String callback(@RequestParam(name = "code")String code,
             @RequestParam(name="state")String state,
-            HttpServletRequest request,
             HttpServletResponse response){
         AccessTokenDTO accessTokenDTO=new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
@@ -63,16 +60,16 @@ public class IndexController {
         accessTokenDTO.setState(state);
         accessTokenDTO.setRedirect_uri(clientRedirectUri);
         String accessToken = githubUtils.getAccessToken(accessTokenDTO);
-//        System.out.println(accessToken);//ghu_xXyfWBaYjwPaS0meQ1RcUuUE7jzxLE4XrcIs
         //根据token获取到github上的用户信息
         UserDTO gitHubUser = githubUtils.getGitHubUser(accessToken);
         if(gitHubUser!=null){//获取到的github上的用户信息
             String token = userService.save(gitHubUser);
+
             //将token存入cookie,作为登录验证。
             response.addCookie(new Cookie("community_user_token",token));
-//            request.getSession().setAttribute("user",gitHubUser);
         }else {
             //登录失败提示
+
         }
         return "redirect:/index";
 //        return "index";//使用模板引擎的情况下，return "thymeleafName" 只是会使用该页面渲染浏览器页面，不会改变浏览器地址栏内容。要想改变，可以使用重定向。
@@ -85,28 +82,27 @@ public class IndexController {
     public String toIndex(HttpServletRequest request,Model model,
                 @RequestParam(value = "page",defaultValue = "1") Integer page,
                 @RequestParam(value = "size",defaultValue = "1") Integer size){
-        //访问主页面，先判断cookie中是否有token值，并且判断和数据库中的是否一致，验证通过的话表示之前已经登陆过，无需重复登录
-        List<Cookie> cookies = Arrays.asList(request.getCookies());
-        List<Cookie> tokenList = cookies.stream().filter(one ->one.getName().equals("community_user_token")).collect(Collectors.toList());
-        if(tokenList.size()!=0){
-            String token = tokenList.get(0).getValue();
-            List<UserDTO> userByToken = userService.getUserByToken(token);
-            if(userByToken.size()!=0){
-                request.getSession().setAttribute("user",userByToken.get(0));
-            }
-        }
         //在访问主页的时候将所有的帖子查出来
 //        List<QuestionDTO> questions = questionService.getAll();
         //因为需要分页显示，因此需要根据传入的分页数据显示
         if(page<1) page=1;
         Integer total = questionService.getCount();
         if(page>total) page=total;
-
         List<QuestionDTO> questions=questionService.getQuesByPage(page,size);
         PageDTO pageDTO = questionService.setPagination(questions, page, size, total);
         model.addAttribute("pagination",pageDTO);
         return "index";
     }
 
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        //退出登录：删除服务器端的session和浏览器的cookie
+        request.getSession().removeAttribute("user");
+        Cookie cookie=new Cookie("community_user_token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
 
 }

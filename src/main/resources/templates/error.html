@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:include="common::bootstrapCS"></div>
+</head>
+<body>
+<div th:replace="common::nav"> </div>
+<div class="jumbotron">
+    <h1>出错啦！！！</h1>
+    <p  th:text="${message}">救命！又报错啦！！</p>
+    <p><a class="btn btn-info btn-lg" href="/" role="button">回到主页</a></p>
+</div>
+</body>
+</html>

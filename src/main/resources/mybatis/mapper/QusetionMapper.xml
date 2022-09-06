@@ -8,4 +8,9 @@
         insert into question(title,content,tag,create_time,modified_time,creator,comment_count,view_count,like_count)
         values(#{title},#{content},#{tag},#{createTime},#{modifiedTime},#{creator},#{commentCount},#{viewCount},#{likeCount});
     </insert>
+    <update id="updateQues" parameterType="com.lin.communityproject.entity.QuestionEntity">
+        update question
+        set title=#{title},tag=#{tag},content=#{content},modified_time=#{modifiedTime}
+        where id=#{id}
+    </update>
 </mapper>

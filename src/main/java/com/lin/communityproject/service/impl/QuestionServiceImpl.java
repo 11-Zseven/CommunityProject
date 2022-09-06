@@ -7,10 +7,14 @@ import com.lin.communityproject.dto.QuestionDTO;
 import com.lin.communityproject.dto.UserDTO;
 import com.lin.communityproject.entity.QuestionEntity;
 import com.lin.communityproject.entity.UserEntity;
+import com.lin.communityproject.exception.CustomizeErrorCode;
+import com.lin.communityproject.exception.CustomizeException;
 import com.lin.communityproject.mapper.QuestionMapper;
 import com.lin.communityproject.mapper.UserMapper;
 import com.lin.communityproject.service.QuestionService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 /**
@@ -28,10 +32,26 @@ public class QuestionServiceImpl implements QuestionService {
     private UserMapper userMapper;
 
     @Override
-    public void createQuestion(QuestionDTO questionDTO) {
-        QuestionEntity entity=new QuestionEntity();
-        BeanUtils.copyProperties(questionDTO,entity);
-        questionMapper.createQuestion(entity);
+    public void saveQuestion(QuestionDTO questionDTO) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(new Date());
+
+        if(questionDTO.getId()!=null){//update
+            QuestionEntity quesById = questionMapper.getQuesById(questionDTO.getId());
+            quesById.setTag(questionDTO.getTag());
+            quesById.setContent(questionDTO.getContent());
+            quesById.setTitle(questionDTO.getTitle());
+            quesById.setModifiedTime(nowTime);
+            questionMapper.updateQues(quesById);
+        }else {//create
+            QuestionEntity entity=new QuestionEntity();
+            BeanUtils.copyProperties(questionDTO,entity);
+            entity.setModifiedTime(nowTime);
+            entity.setCreateTime(nowTime);
+            questionMapper.createQuestion(entity);
+        }
+
+
     }
 
     @Override
@@ -74,12 +94,49 @@ public class QuestionServiceImpl implements QuestionService {
         return questionMapper.getCount();
     }
 
+    @Override
+    public Integer getCountByUserId(Integer userId){
+        return questionMapper.getCountByUserId(userId);
+    }
+
     //设置分页
     @Override
     public PageDTO setPagination(List<QuestionDTO> questions, Integer page, Integer size, Integer total) {
         PageDTO dto=new PageDTO();
         dto.setQuestions(questions);
         dto.setPagination(page,total,size);
+        return dto;
+    }
+
+    @Override
+    public PageDTO getMyQuestion(Integer userId,Integer page, Integer size) {
+        Integer total=getCountByUserId(userId);
+        List<QuestionEntity> entities=questionMapper.getQuesByUserId(userId,(page-1)*size,size);
+        List<QuestionDTO> myQues = entities.stream().map(one -> {
+            QuestionDTO dto = new QuestionDTO();
+            BeanUtils.copyProperties(one, dto);
+            UserDTO userDTO = new UserDTO();
+            UserEntity userById = userMapper.getUserById(one.getCreator());
+            BeanUtils.copyProperties(userById, userDTO);
+            userDTO.setLogin(userById.getName());
+            dto.setUser(userDTO);
+            return dto;
+        }).collect(Collectors.toList());
+        PageDTO pageDTO = setPagination(myQues, page, size, total);
+        return pageDTO;
+    }
+
+    @Override
+    public QuestionDTO getQuesById(Integer id) {
+        QuestionEntity entity = questionMapper.getQuesById(id);
+        if(entity==null) throw new CustomizeException(CustomizeErrorCode.Question_Not_Found);//这里就可以直接使用枚举类型中的异常
+        QuestionDTO dto=new QuestionDTO();
+        BeanUtils.copyProperties(entity,dto);
+        UserEntity userById = userMapper.getUserById(entity.getCreator());
+        UserDTO userDTO=new UserDTO();
+        BeanUtils.copyProperties(userById,userDTO);
+        userDTO.setLogin(userById.getName());
+        dto.setUser(userDTO);
         return dto;
     }
 }

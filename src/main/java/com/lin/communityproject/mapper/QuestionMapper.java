@@ -18,5 +18,16 @@ public interface QuestionMapper {
 
     @Select("select count(*) from question")
     Integer getCount();
+
+    @Select("select count(*) from question where creator=#{userId}")
+    Integer getCountByUserId(@Param("userId") Integer userId);
+
+    @Select("select id,title,content,tag,create_time,modified_time,creator,comment_count,view_count,like_count from question where creator=#{userId} limit #{offset},#{size}")
+    List<QuestionEntity> getQuesByUserId(@Param("userId") Integer userId,@Param("offset") Integer offset,@Param("size") Integer size);
+
+    @Select("select id,title,content,tag,create_time,modified_time,creator,comment_count,view_count,like_count from question where id=#{id}")
+    QuestionEntity getQuesById(@Param("id") Integer id);
+
+    Integer updateQues(QuestionEntity entity);
 }
 

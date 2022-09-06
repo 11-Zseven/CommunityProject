@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CommunityProject</title>
+    <div th:include="common::bootstrapCS"></div>
+</head>
+<body>
+
+<div th:replace="common::nav"> </div>
+
+<div class="container-fluid publish">
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 pub-content" >
+            <h1 th:text="${profileTitle}"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> </h1>
+            <hr>
+            <div class="media " th:each="question:${proQuestion.questions}">
+                <div class="media-left">
+                    <a href="#">
+                        <!--thymeleaf中链接要用@{}-->
+                        <img class="media-object" style="width:40px;height: 40px"
+                             th:src="${question.user.avatarUrl}"
+                             src="https://avatars.githubusercontent.com/u/96112575?v=4">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" >
+                        <a th:href="@{/question/detail/${qusetion.title}}" th:text="${question.title}"></a>
+                    </h4>
+                    <span class="count">
+                            ·<span th:text="${question.commentCount}"></span>人评论
+                            ·<span th:text="${question.viewCount}"></span>次阅览
+                            ·<span th:text="${question.likeCount}"></span>个点赞
+                        <!--   发布时间  时间戳  ${#dates.format(question.createTime, 'yyyy-MM-dd HH:mm')} (由于数据库中直接存了格式化的时间所以可以直接使用)-->
+                            <span th:text="${question.createTime}"></span>
+                        </span>
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation" th:if="${proQuestion.questions!=null}">
+                <ul class="pagination">
+                    <li th:if="${proQuestion.showFirstPage}">
+                        <a th:href="@{'/profile/question/1'}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
+                    <li th:if="${proQuestion.showPre}">
+                        <a th:href="@{'/profile/question/'+${proQuestion.currentPage-1}}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+                    <li th:each="page:${proQuestion.pages}" th:class="${page==proQuestion.currentPage}?'active':''">
+                        <a th:href="@{'/profile/question/'+${page}}"  th:text="${page}"></a>
+                    </li>
+                    <li th:if="${proQuestion.showNext}">
+                        <a th:href="@{'/profile/question/'+${proQuestion.currentPage+1}}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <li th:if="${proQuestion.showEndPage}">
+                        <a th:href="@{'/profile/question/'+${proQuestion.totalPage}}"  aria-label="Next">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <table class="table table-hover profileTable" >
+                <tr>
+                    <td><a>我发布的问题</a></td>
+                </tr>
+                <tr>
+                    <td><a>最新回复<span class="badge">3</span></a></td>
+                </tr>
+                <tr>
+                    <td><a>最新回复<span class="badge">3</span></a></td>
+                </tr>
+                <tr>
+                    <td><a>最新回复<span class="badge">3</span></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
