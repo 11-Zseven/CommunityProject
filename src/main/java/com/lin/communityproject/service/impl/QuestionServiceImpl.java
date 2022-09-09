@@ -46,6 +46,9 @@ public class QuestionServiceImpl implements QuestionService {
         }else {//create
             QuestionEntity entity=new QuestionEntity();
             BeanUtils.copyProperties(questionDTO,entity);
+            entity.setCommentCount(0);
+            entity.setViewCount(0);
+            entity.setLikeCount(0);
             entity.setModifiedTime(nowTime);
             entity.setCreateTime(nowTime);
             questionMapper.createQuestion(entity);
@@ -130,6 +133,8 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDTO getQuesById(Integer id) {
         QuestionEntity entity = questionMapper.getQuesById(id);
         if(entity==null) throw new CustomizeException(CustomizeErrorCode.Question_Not_Found);//这里就可以直接使用枚举类型中的异常
+        //每一次访问都会让阅读数加+（注意高并发情况：使用乐观锁，这里没有用到）
+        Integer incrView=questionMapper.incrViewCount(id);
         QuestionDTO dto=new QuestionDTO();
         BeanUtils.copyProperties(entity,dto);
         UserEntity userById = userMapper.getUserById(entity.getCreator());
@@ -138,5 +143,10 @@ public class QuestionServiceImpl implements QuestionService {
         userDTO.setLogin(userById.getName());
         dto.setUser(userDTO);
         return dto;
+    }
+
+    @Override
+    public void incrCommentCount(Integer id) {
+        questionMapper.incrCommentCount(id);
     }
 }

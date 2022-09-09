@@ -29,5 +29,9 @@ public interface QuestionMapper {
     QuestionEntity getQuesById(@Param("id") Integer id);
 
     Integer updateQues(QuestionEntity entity);
+
+    Integer incrViewCount(Integer id);
+
+    Integer incrCommentCount(Integer id);
 }
 

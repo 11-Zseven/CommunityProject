@@ -19,4 +19,6 @@ public interface QuestionService {
     PageDTO getMyQuestion(Integer userId,Integer page, Integer size);
 
     QuestionDTO getQuesById(Integer id);
+
+    void incrCommentCount(Integer id);
 }

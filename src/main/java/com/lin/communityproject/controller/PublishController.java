@@ -14,7 +14,7 @@ import com.lin.communityproject.service.QuestionService;
 import javax.servlet.http.HttpServletRequest;
 /**
  *@program: CommunityProject
- *@description:
+ *@description: 和Question相关的访问
  *@author: lin han
  *@date: 2022/09/04
  */
@@ -74,4 +74,12 @@ public class PublishController {
         model.addAttribute("question",quesById);
         return "publish";
     }
+
+    @RequestMapping("/question/detail/{id}")
+    public String getQuestionDetail(@PathVariable("id") Integer id,Model model){
+        QuestionDTO dto=questionService.getQuesById(id);
+        model.addAttribute("questionById",dto);
+        return "question";
+    }
+
 }

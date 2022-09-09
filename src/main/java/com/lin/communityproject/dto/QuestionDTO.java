@@ -1,12 +1,11 @@
 package com.lin.communityproject.dto;
-import lombok.Data;
 /**
  *@program: CommunityProject
  *@description:
  *@author: lin han
  *@date: 2022/09/04
  */
-@Data
+
 public class QuestionDTO {
     private Integer id;
     private String title;
@@ -19,4 +18,73 @@ public class QuestionDTO {
     private Integer viewCount;
     private Integer likeCount;
     private UserDTO user;
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getContent() {
+        return content;
+    }
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public String getTag() {
+        return tag;
+    }
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+    public String getCreateTime() {
+        return createTime;
+    }
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+    public String getModifiedTime() {
+        return modifiedTime;
+    }
+    public void setModifiedTime(String modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+    public Integer getCreator() {
+        return creator;
+    }
+    public void setCreator(Integer creator) {
+        this.creator = creator;
+    }
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+    public void setCommentCount(Integer commentCount) {
+        if(commentCount==null) commentCount=0;
+        else this.commentCount = commentCount;
+    }
+    public Integer getViewCount() {
+        return viewCount;
+    }
+    public void setViewCount(Integer viewCount) {
+        if(viewCount==null) viewCount=0;
+        else this.viewCount = viewCount;
+    }
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+    public void setLikeCount(Integer likeCount) {
+        if(likeCount==null) likeCount=0;
+        else this.likeCount = likeCount;
+    }
+    public UserDTO getUser() {
+        return user;
+    }
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
 }

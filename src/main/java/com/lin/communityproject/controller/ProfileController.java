@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.lin.communityproject.dto.PageDTO;
-import com.lin.communityproject.dto.QuestionDTO;
 import com.lin.communityproject.dto.UserDTO;
 import com.lin.communityproject.service.QuestionService;
 import com.lin.communityproject.service.UserService;
@@ -14,7 +13,7 @@ import com.lin.communityproject.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 /**
  *@program: CommunityProject
- *@description:
+ *@description: 我的主页/个人资料
  *@author: lin han
  *@date: 2022/09/05
  */
@@ -46,11 +45,8 @@ public class ProfileController{
         return "/profile";
     }
 
-    @RequestMapping("/question/detail/{id}")
-    public String getQuestionDetail(@PathVariable("id") Integer id,Model model){
-        QuestionDTO dto=questionService.getQuesById(id);
-        model.addAttribute("questionById",dto);
-        return "question";
-    }
+
+
+
 
 }

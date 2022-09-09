@@ -3,8 +3,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
+import com.lin.communityproject.dto.ResultCodeDTO;
+import com.lin.communityproject.exception.CustomizeErrorCode;
 import com.lin.communityproject.exception.CustomizeException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,11 +23,21 @@ import javax.servlet.http.HttpServletRequest;
 public class CustomizeExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    ModelAndView handle(Throwable ex, Model model){
+    @ResponseBody
+    Object handle(Throwable ex, Model model,HttpServletRequest request){
+        //两种形式返回，一种是返回json格式的数据，一种是直接返回错误页面
+        String contentType = request.getContentType();
+        if("application/json".equals(contentType)){
+            if (ex instanceof  CustomizeException){
+                return ResultCodeDTO.errorOf((CustomizeException) ex);
+            }else {
+                return ResultCodeDTO.errorOf(CustomizeErrorCode.System_Error);
+            }
+        }
         if(ex instanceof CustomizeException){
             model.addAttribute("message",ex.getMessage());
         }else {
-            model.addAttribute("message","别救命了，快去看看后端报错或者日志吧！！！家都要没了！");
+            model.addAttribute("message",CustomizeErrorCode.System_Error.getMessage());
         }
 
         return new ModelAndView("error");

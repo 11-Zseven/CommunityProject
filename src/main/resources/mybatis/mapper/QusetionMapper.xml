@@ -13,4 +13,15 @@
         set title=#{title},tag=#{tag},content=#{content},modified_time=#{modifiedTime}
         where id=#{id}
     </update>
+    <update id="incrViewCount">
+        update question
+        set view_count=view_count+1
+        where id=#{id}
+    </update>
+    <update id="incrCommentCount">
+        update question
+        set comment_count=comment_count+1
+        where id=#{id}
+    </update>
+<!--    更新comment_count和view_count的set可以写成：set view_count+=#{view_count,jdbcType=Integer} ==> 如果viewcount不超过10次就先将数据存在内存中，满足10次才存到数据库，减少和数据库的交互 -->
 </mapper>
