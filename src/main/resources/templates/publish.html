@@ -32,7 +32,7 @@
                     <input type="text" class="form-control" id="tag" name="tag" th:value="${question.tag}" placeholder="输入标签，以’,’分隔">
                 </div>
                 <div>
-                    <p class="text-danger" th:if="${errorTag!=null}" th:text="${errorTag}"></p>
+                    <p class="alert alert-danger" role="alert" th:if="${errorTag!=null}" th:text="${errorTag}"></p>
                     <button type="submit" class="btn btn-success btn-publish">发起</button>
                 </div>
 

@@ -21,13 +21,88 @@
                 阅读数：<span th:text="${questionById.viewCount}"></span>
             </span>
             <hr>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionById.content}" style="border-bottom: 1px solid #e0e0e0;"></div>
-            <a class="count" th:href="'/publish/'+${questionById.id}" th:if="${session.user.userId} == ${questionById.creator}" >
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionById.content}" style="border-bottom: 1px solid #e0e0e0;">
+
+            </div>
+            <a class="count btn-publish" th:href="'/publish/'+${questionById.id}" th:if="${session.user.userId} == ${questionById.creator}" >
                 <span class="glyphicon glyphicon-pencil">编辑</span>
             </a>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h3 > 个回复 </h3>
-                <hr>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <h4><span th:text="${questionById.commentCount}"></span>个回复</h4>
+                <hr style="margin-top: 0px">
+                <!--一级评论-->
+                <div >
+                    <ul class="list-group">
+                        <li class="list-group-item liBorder" th:each="comment:${commentsQues}">
+                            <div class="media">
+                                <div class="media-left" style="padding-top:20px">
+                                    <!--                        <a href="#">-->
+                                    <!--thymeleaf中链接要用@{}-->
+                                    <img class="media-object" style="width:40px;height: 40px" th:src="${comment.commenterDetail.avatarUrl}">
+                                    <!--                        </a>-->
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="media-heading" >
+                                        <span th:text="${comment.commenterDetail.login}"></span>
+                                    </h5>
+                                    <p th:text="${comment.comment}"></p>
+                                    <div class="commentMenu">
+                                        <span class="glyphicon glyphicon-thumbs-up icon">点赞数</span>
+                                        <!-- data-*属性用于自定义属性(-、小写字母) 在这里设置用于获取这个评论的二级评论  -->
+                                        <span class="glyphicon glyphicon-comment icon" th:data-id="${comment.id}" onclick="commentCollapse(this)">评论回复</span>
+                                        <span class="btn-publish" th:text="${comment.createTime}"></span>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse" th:id="${'comment-'+comment.id}">
+                                        <!-- 二级评论   -->
+                                        <ul class="list-group">
+                                            <li class="list-group-item" th:each="subComm:${subComm}">
+                                                <div class="media">
+                                                    <div class="media-left" style="padding-top:20px">
+                                                        <!--                        <a href="#">-->
+                                                        <!--thymeleaf中链接要用@{}-->
+                                                        <img class="media-object" style="width:40px;height: 40px" th:src="${subComm.commenterDetail.avatarUrl}">
+                                                        <!--                        </a>-->
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5 class="media-heading" >
+                                                            <span th:value="${subComm.commenterDetail.login}"></span>
+                                                        </h5>
+                                                        <span th:text="${subComm.comment}"></span>
+                                                        <div class="commentMenu">
+                                                            <span class="btn-publish" th:text="${subComm.createTime}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <!-- text的id：用于jq获取该元素内容;onclick的参数this表示传入当前元素;btn的data-id用于存放要回复的评论的id,方便取值,同时多传一个questionId，方便后面加评论数  -->
+                                        <input type="text" class="form-control" placeholder="评论一下..." th:id="${'comm2-'+comment.id}">
+                                        <button type="button" class="btn btn-success btn-publish" th:data-cId="${comment.id}" th:data-qId="${questionById.id}" onclick="subComment(this)" style="margin: 10px">评论</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="commentPanel">
+                <input type="hidden" id="questionId" th:value="${questionById.id}">
+<!--                <input type="hidden" id="commenter" th:value="${questionById.user.userId}">-->
+                <div class="media">
+                    <div class="media-left">
+                        <!--                        <a href="#">-->
+                        <!--thymeleaf中链接要用@{}-->
+                        <img class="media-object" style="width:40px;height: 40px" th:src="${questionById.user.avatarUrl}">
+                        <!--                        </a>-->
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading" >
+                            <span th:text="${questionById.user.login}"></span>
+                        </h5>
+                    </div>
+                </div>
+                    <textarea id="commentContent" class="form-control marginSet" rows="5" ></textarea>
+                    <button type="button" class="btn btn-success btn-publish" onclick="comment()">回复</button>
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">

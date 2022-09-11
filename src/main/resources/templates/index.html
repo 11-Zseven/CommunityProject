@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <title>CommunityProject</title>
     <div th:include="common::bootstrapCS"></div>
-
+    <script type="text/javascript">
+        //当文档加载完成后加载一下，(也就是实现回复未登录再登录后不打开新页面)
+        window.onload = function (){
+            if(window.localStorage.getItem("isAjax")){//或者 == "true"
+                window.close()
+                window.localStorage.removeItem("isAjax")//避免一直存在，影响访问主页
+            }
+        }
+    </script>
 </head>
 <body>
 

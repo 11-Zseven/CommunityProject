@@ -13,4 +13,18 @@
         set name=#{name},avatar_url=#{avatarUrl},token=#{token},modified_time=#{modifiedTime},description=#{description}
         where id=#{id};
     </update>
+<!--查询list/数组 需要使用if标签判空(注意size()!=0是错误写法) ： https://blog.csdn.net/FANTASY522272820/article/details/78528346-->
+<!--  foreach:https://www.cnblogs.com/fnlingnzb-learner/p/10566452.html  -->
+    <select id="getUsersInIds" resultType="com.lin.communityproject.entity.UserEntity">
+        select user_id,id,name,avatar_url,token,create_time,modified_time,description
+        from user
+        <where>
+            <if test="list != null and list.size()>0">
+                and user_id=
+                <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

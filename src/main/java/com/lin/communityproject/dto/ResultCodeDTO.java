@@ -7,27 +7,45 @@ import com.lin.communityproject.exception.CustomizeException;
  *@author: lin han
  *@date: 2022/09/07
  */
-public class ResultCodeDTO {
+public class ResultCodeDTO<T> {
     private Integer code;
     private String message;
-    /**
-     * 这几个errorOf是不是有点重复了？？？
-     */
-    public static ResultCodeDTO errorOf(Integer code,String message){
+    private T data;
+
+    /*泛型的使用*/
+    public static <T> ResultCodeDTO resultOf(T data){
+        ResultCodeDTO dto=new ResultCodeDTO();
+        dto.setCode(200);
+        dto.setMessage("请求成功");
+        dto.setData(data);
+        return dto;
+    }
+
+    public static ResultCodeDTO resultOf(Integer code,String message){
         ResultCodeDTO dto=new ResultCodeDTO();
         dto.setCode(code);
         dto.setMessage(message);
         return dto;
     }
-    public static ResultCodeDTO errorOf(CustomizeErrorCode error) {
-        return errorOf(error.getCode(),error.getMessage());
+    public static ResultCodeDTO resultOf(CustomizeErrorCode error) {
+        return resultOf(error.getCode(),error.getMessage());
     }
-    public static ResultCodeDTO errorOf(CustomizeException ex){
-        return errorOf(ex.getCode(),ex.getMessage());
+    public static ResultCodeDTO resultOf(CustomizeException ex){
+        return resultOf(ex.getCode(),ex.getMessage());
     }
+
+    public static ResultCodeDTO successOf(){
+        ResultCodeDTO dto=new ResultCodeDTO();
+        dto.setCode(200);
+        dto.setMessage("success!");
+        return dto;
+    }
+
+
     public ResultCodeDTO() {
 
     }
+
     public Integer getCode() {
         return code;
     }
@@ -39,5 +57,11 @@ public class ResultCodeDTO {
     }
     public void setMessage(String message) {
         this.message = message;
+    }
+    public T getData() {
+        return data;
+    }
+    public void setData(T data) {
+        this.data = data;
     }
 }

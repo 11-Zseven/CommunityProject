@@ -3,7 +3,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import com.alibaba.fastjson.JSON;
+import com.lin.communityproject.dto.ResultCodeDTO;
 import com.lin.communityproject.dto.UserDTO;
+import com.lin.communityproject.exception.CustomizeErrorCode;
 import com.lin.communityproject.service.UserService;
 
 import javax.servlet.http.Cookie;
@@ -42,7 +45,16 @@ public class LoginJudgeInterceptor implements HandlerInterceptor {
                 }
             }
         }
-        response.sendRedirect("/");//跳转到首页
+        if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))){
+            response.setHeader("REDIRECT","REDIRECT");
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/html;charset=UTF-8");
+            response.setHeader("CONTENTPATH","https://github.com/login/oauth/authorize?client_id=Iv1.1417ff976c0c76e4&redirect_uri=http://localhost:8080/loginForGit&state=1");
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().print(JSON.toJSON(ResultCodeDTO.resultOf(CustomizeErrorCode.UnlessLogin)));
+//            response.getWriter().write(JSON.toJSONString(ResultCodeDTO.resultOf(CustomizeErrorCode.UnlessLogin)));
+        }
+        else response.sendRedirect("/");//跳转到首页
         return false;
     }
     @Override

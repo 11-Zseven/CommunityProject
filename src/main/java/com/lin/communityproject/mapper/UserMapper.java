@@ -30,4 +30,6 @@ public interface UserMapper {
      */
     @Select("select user_id,id,name,avatar_url,token,create_time,modified_time,description from user where token=#{token}")
     List<UserEntity> getUserByToken(@Param("token")String token);
+
+    List<UserEntity> getUsersInIds(List<Integer> commenters);
 }

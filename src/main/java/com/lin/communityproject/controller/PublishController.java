@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.lin.communityproject.dto.CommentDTO;
 import com.lin.communityproject.dto.QuestionDTO;
 import com.lin.communityproject.dto.UserDTO;
+import com.lin.communityproject.enums.CommentType;
+import com.lin.communityproject.service.CommentService;
 import com.lin.communityproject.service.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 /**
  *@program: CommunityProject
  *@description: 和Question相关的访问
@@ -23,6 +27,10 @@ public class PublishController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private CommentService commentService;
+
     @GetMapping("/publish")
     public String toPublish(Model model){
         QuestionDTO questionDTO=new QuestionDTO();
@@ -79,6 +87,9 @@ public class PublishController {
     public String getQuestionDetail(@PathVariable("id") Integer id,Model model){
         QuestionDTO dto=questionService.getQuesById(id);
         model.addAttribute("questionById",dto);
+        //除了问题本身的话，还有该问题的评论列表
+        List<CommentDTO> commentsQues = commentService.getCommentsQues(id, CommentType.Question_TYPE);
+        model.addAttribute("commentsQues",commentsQues);
         return "question";
     }
 

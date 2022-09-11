@@ -29,9 +29,9 @@ public class CustomizeExceptionHandler {
         String contentType = request.getContentType();
         if("application/json".equals(contentType)){
             if (ex instanceof  CustomizeException){
-                return ResultCodeDTO.errorOf((CustomizeException) ex);
+                return ResultCodeDTO.resultOf((CustomizeException) ex);
             }else {
-                return ResultCodeDTO.errorOf(CustomizeErrorCode.System_Error);
+                return ResultCodeDTO.resultOf(CustomizeErrorCode.System_Error);
             }
         }
         if(ex instanceof CustomizeException){

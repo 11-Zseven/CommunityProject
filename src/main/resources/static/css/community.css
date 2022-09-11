@@ -38,3 +38,32 @@ body{
 .jumbotron{
     margin: 50px;
 }
+.media-body{
+    padding-top: 20px;
+}
+.marginSet{
+    margin: 10px 0px;
+}
+.liBorder{
+    /*border:none;*/
+    border-right: none;
+    border-left: none;
+    padding: 0;
+}
+.commentMenu{
+    color: #999;
+    margin-top: 10px;
+}
+.commentMenu .icon{
+    margin-right: 8px;
+    cursor: pointer;
+}
+.commentMenu .icon:hover{
+    color: #499cf3;
+}
+/*.commentMenu .icon:active {*/
+/*    color: #499cf3;*/
+/*}*/
+.activeC{
+    color: #499cf3;
+}
