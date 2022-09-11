@@ -4,21 +4,32 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lin.communityproject.mapper.CommentMapper">
     <insert id="createComment">
-        insert into comment(parent_id,type,create_time,modified_time,like_count,commenter,comment)
-        values(#{parentId},#{type},#{createTime},#{modifiedTime},#{likeCount},#{commenter},#{comment})
+        insert into comment(parent_id,type,create_time,modified_time,like_count,commenter,comment,comment_count)
+        values(#{parentId},#{type},#{createTime},#{modifiedTime},#{likeCount},#{commenter},#{comment},#{commentCount})
     </insert>
 
     <update id="updateCommentById">
         update comment
-        set comment=${comment},like_count=#{likeCount},modified_time=#{modifiedTime}
+        set comment=${comment},like_count=#{likeCount},modified_time=#{modifiedTime},comment_count=#{commentCount}
         where id=#{id}
     </update>
 
     <select id="getCommentsComm" resultType="com.lin.communityproject.entity.CommentEntity">
-        select c.id,c.parent_id,c.type,c.commenter,c.`comment`,c.like_count,c.create_time,c.modified_time,
+        select c.id,c.parent_id,c.type,c.commenter,c.`comment`,c.like_count,c.create_time,c.modified_time,c.comment_count
         from comment  c
         left join (select * from comment where parent_id=#{parentd}) t
         on t.id=c.parent_id
         where c.type=2
     </select>
+
+    <update id="incrCommentCount">
+        update comment
+        set comment_count=comment_count+1
+        where id=#{id}
+    </update>
+    <update id="incrCommLike">
+        update comment
+        set like_count=like_count+1,modified_time=#{modifiedTime}
+        where id=#{id}
+    </update>
 </mapper>

@@ -19,6 +19,7 @@ public class CommentEntity {
     private Integer commenter;
     private String comment;
     private Integer likeCount;
+    private Integer commentCount;
     public Integer getId() {
         return id;
     }
@@ -66,5 +67,11 @@ public class CommentEntity {
     }
     public void setLikeCount(Integer likeCount) {
         this.likeCount = likeCount;
+    }
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
     }
 }

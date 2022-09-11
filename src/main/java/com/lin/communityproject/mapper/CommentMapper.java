@@ -20,8 +20,10 @@ public interface CommentMapper {
 
     Integer updateCommentById(CommentEntity entity);
 
-    @Select("select id,parent_Id,`type`,create_time,modified_time,comment,commenter,like_count from comment where parent_id=#{parentId} and type = #{type} order by create_time desc")
-    List<CommentEntity> getCommentsQues(@Param("parentId") Integer parentId,@Param("type") Integer type);
+    @Select("select id,parent_Id,`type`,create_time,modified_time,comment,commenter,like_count,comment_count from comment where parent_id=#{parentId} and type = #{type} order by create_time desc")
+    List<CommentEntity> getComments(@Param("parentId") Integer parentId,@Param("type") Integer type);
 
-    List<CommentEntity> getCommentsComm(Integer parentId);
+    Integer incrCommentCount(@Param("id") Integer parentId);
+
+    Integer incrCommLike(@Param("id") Integer cid,@Param("modifiedTime") String modifiedTime);
 }

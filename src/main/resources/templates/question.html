@@ -47,37 +47,16 @@
                                     </h5>
                                     <p th:text="${comment.comment}"></p>
                                     <div class="commentMenu">
-                                        <span class="glyphicon glyphicon-thumbs-up icon">点赞数</span>
+                                        <span class="glyphicon glyphicon-thumbs-up icon" th:text="${comment.likeCount}" th:id="${'commLike-'+${comment.id}}" th:data-cId="${comment.id}" onclick="incrCommLike(this)"></span>
                                         <!-- data-*属性用于自定义属性(-、小写字母) 在这里设置用于获取这个评论的二级评论  -->
-                                        <span class="glyphicon glyphicon-comment icon" th:data-id="${comment.id}" onclick="commentCollapse(this)">评论回复</span>
+                                        <span class="glyphicon glyphicon-comment icon" th:data-id="${comment.id}" th:data-qId="${questionById.id}" onclick="commentCollapse(this)" th:text="${comment.commentCount}"></span>
                                         <span class="btn-publish" th:text="${comment.createTime}"></span>
                                     </div>
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse" th:id="${'comment-'+comment.id}">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 subCommDiv collapse " th:id="${'comment-'+comment.id}">
                                         <!-- 二级评论   -->
-                                        <ul class="list-group">
-                                            <li class="list-group-item" th:each="subComm:${subComm}">
-                                                <div class="media">
-                                                    <div class="media-left" style="padding-top:20px">
-                                                        <!--                        <a href="#">-->
-                                                        <!--thymeleaf中链接要用@{}-->
-                                                        <img class="media-object" style="width:40px;height: 40px" th:src="${subComm.commenterDetail.avatarUrl}">
-                                                        <!--                        </a>-->
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5 class="media-heading" >
-                                                            <span th:value="${subComm.commenterDetail.login}"></span>
-                                                        </h5>
-                                                        <span th:text="${subComm.comment}"></span>
-                                                        <div class="commentMenu">
-                                                            <span class="btn-publish" th:text="${subComm.createTime}"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
                                         <!-- text的id：用于jq获取该元素内容;onclick的参数this表示传入当前元素;btn的data-id用于存放要回复的评论的id,方便取值,同时多传一个questionId，方便后面加评论数  -->
-                                        <input type="text" class="form-control" placeholder="评论一下..." th:id="${'comm2-'+comment.id}">
-                                        <button type="button" class="btn btn-success btn-publish" th:data-cId="${comment.id}" th:data-qId="${questionById.id}" onclick="subComment(this)" style="margin: 10px">评论</button>
+                                        <input type="text" class="form-control" style="margin-top: 10px" placeholder="评论一下..." th:id="${'comm2-'+comment.id}">
+                                        <button type="button" class="btn btn-success btn-publish" th:data-cId="${comment.id}"  onclick="subComment(this)" style="margin: 10px">评论</button>
                                     </div>
                                 </div>
                             </div>

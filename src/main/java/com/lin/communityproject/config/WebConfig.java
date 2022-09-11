@@ -32,5 +32,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
 //                .excludePathPatterns("/","/loginForGit","/static/**");
                 .excludePathPatterns("/loginForGit","/","/css/**","/js/**","/fonts/**");
+        //不能放行/index 否则一直重定向/转发
     }
 }

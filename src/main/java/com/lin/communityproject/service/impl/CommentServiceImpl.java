@@ -49,18 +49,27 @@ public class CommentServiceImpl implements CommentService {
             //likeCount comment modifiedTime
             CommentEntity entity=commentMapper.getCommentById(commentDTO.getId());
             entity.setModifiedTime(nowTime);
-            entity.setComment(commentDTO.getComment());
-            entity.setLikeCount(commentDTO.getLikeCount());
+            if(StringUtils.hasLength(commentDTO.getComment()) && !commentDTO.getComment().equals(entity.getComment()))
+                entity.setComment(commentDTO.getComment());
+            if( commentDTO.getLikeCount()!=entity.getLikeCount())
+                entity.setLikeCount(commentDTO.getLikeCount()+entity.getLikeCount());
+            if(commentDTO.getCommentCount()!=entity.getCommentCount())
+                entity.setCommentCount(commentDTO.getCommentCount()+entity.getCommentCount());
             commentMapper.updateCommentById(entity);
         }else {//创建 type的值由前端传 减少和数据库的交互
             commentDTO.setCreateTime(nowTime);
             commentDTO.setModifiedTime(nowTime);
+            commentDTO.setCommentCount(0);
+            commentDTO.setLikeCount(0);
             CommentEntity entity=new CommentEntity();
             BeanUtils.copyProperties(commentDTO,entity);
             commentMapper.createComment(entity);
             if(commentDTO.getType().equals(CommentType.Question_TYPE.getType())){
+                //目前一级评论数是问题的评论数，二级评论数是一级的评论数，不会统计到问题中。(统计的话，要么改结构加个questionId,要么当type=2的时候再获取这个评论的questionId,再incr(前提是只有二级评论不允许评论套娃))
                 //如果回复的是问题的话，问题的评论数+1(其实回复某问题的某个评论，那么这个问题的评论数是不是也应该＋1？？==>层层找出问题然后+1?不如直接写个questionId属性？ )
                 questionMapper.incrCommentCount(commentDTO.getParentId());
+            }else if(commentDTO.getType().equals(CommentType.COMMENT_TYPE.getType())){
+                commentMapper.incrCommentCount(commentDTO.getParentId());
             }
         }
     }
@@ -97,8 +106,8 @@ public class CommentServiceImpl implements CommentService {
      * @return
      */
     @Override
-    public List<CommentDTO> getCommentsQues(Integer parentId,CommentType type){
-        List<CommentEntity> commentQuestion = commentMapper.getCommentsQues(parentId,type.getType());
+    public List<CommentDTO> getComments(Integer parentId,CommentType type){
+        List<CommentEntity> commentQuestion = commentMapper.getComments(parentId,type.getType());
         if(commentQuestion == null || commentQuestion.size()==0){
             return new ArrayList<>();
         }
@@ -122,31 +131,23 @@ public class CommentServiceImpl implements CommentService {
         return collect;
     }
 
-    //获取问题的二级评论
-    public List<CommentDTO> getCommentsComm(Integer parentId){
-        List<CommentEntity> commentQuestion = commentMapper.getCommentsComm(parentId);
+    @Override
+    public void incrCommLike(Integer cid) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(new Date());
+        commentMapper.incrCommLike(cid,nowTime);
+    }
 
-        if(commentQuestion == null || commentQuestion.size()==0){
-            return new ArrayList<>();
-        }
-        //commenterDetail distinct()方法主要是根据hashcode和equals方法进去去重的，所以需要重写hashCode、equals才可以使用distinct去重
-        List<Integer> commenters = commentQuestion.stream().map(one -> one.getCommenter()).distinct().collect(Collectors.toList());
-        List<UserEntity> entities= userMapper.getUsersInIds(commenters);
-        List<UserDTO> userList = entities.stream().map(one -> {
-            UserDTO dto = new UserDTO();
-            BeanUtils.copyProperties(one, dto);
-            return dto;
-        }).collect(Collectors.toList());
-
-        Map<String, UserDTO> userMap = userList.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
-
-
-        List<CommentDTO> collect = commentQuestion.stream().map(one -> {
-            CommentDTO dto = new CommentDTO();
-            BeanUtils.copyProperties(one, dto);
-            dto.setCommenterDetail(userMap.get(dto.getCommenter()));
-            return dto;
-        }).collect(Collectors.toList());
-        return collect;
+    @Override
+    public CommentDTO getCommentById(Integer id) {
+        CommentEntity commentById = commentMapper.getCommentById(id);
+        CommentDTO dto=new CommentDTO();
+        BeanUtils.copyProperties(commentById,dto);
+        UserEntity userById = userMapper.getUserById(dto.getCommenter());
+        UserDTO dto1=new UserDTO();
+        BeanUtils.copyProperties(userById,dto1);
+        dto1.setLogin(userById.getName());
+        dto.setCommenterDetail(dto1);
+        return dto;
     }
 }

@@ -9,5 +9,9 @@ public interface CommentService {
 
     void saveComment(CommentDTO commentDTO);
 
-    List<CommentDTO> getCommentsQues(Integer parentId, CommentType type);
+    List<CommentDTO> getComments(Integer parentId, CommentType type);
+
+    void incrCommLike(Integer cid);
+
+    CommentDTO getCommentById(Integer id);
 }

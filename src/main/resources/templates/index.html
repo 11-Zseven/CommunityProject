@@ -37,7 +37,7 @@
                             <a th:href="@{'/question/detail/'+${question.id}}"><span th:text="${question.title}"></span></a>
                         </h4>
                         <span class="count">
-                            ·<span th:text="${question.commentCount}"></span>人评论
+                            ·<span th:text="${question.commentCount}"></span>个评论
                             ·<span th:text="${question.viewCount}"></span>次阅览
                             ·<span th:text="${question.likeCount}"></span>个点赞
                             <!--   发布时间  时间戳  ${#dates.format(question.createTime, 'yyyy-MM-dd HH:mm')} (由于数据库中直接存了格式化的时间所以可以直接使用)-->
@@ -49,25 +49,25 @@
                 <nav aria-label="Page navigation" th:if="${pagination.questions!=null}">
                     <ul class="pagination">
                         <li th:if="${pagination.showFirstPage}">
-                            <a th:href="@{'/index?page=1'}" aria-label="Previous">
+                            <a th:href="@{'/?page=1'}" aria-label="Previous">
                                 <span aria-hidden="true">&lt;&lt;</span>
                             </a>
                         </li>
                         <li th:if="${pagination.showPre}">
-                            <a th:href="@{'/index?page='+${pagination.currentPage-1}}" aria-label="Previous">
+                            <a th:href="@{'/?page='+${pagination.currentPage-1}}" aria-label="Previous">
                                 <span aria-hidden="true">&lt;</span>
                             </a>
                         </li>
                         <li th:each="page:${pagination.pages}" th:class="${page==pagination.currentPage}?'active':''">
-                            <a th:href="@{'/index?page='+${page}}"  th:text="${page}"></a>
+                            <a th:href="@{'/?page='+${page}}"  th:text="${page}"></a>
                         </li>
                         <li th:if="${pagination.showNext}">
-                            <a th:href="@{'/index?page='+${pagination.currentPage+1}}" aria-label="Next">
+                            <a th:href="@{'/?page='+${pagination.currentPage+1}}" aria-label="Next">
                                 <span aria-hidden="true">&gt;</span>
                             </a>
                         </li>
                         <li th:if="${pagination.showEndPage}">
-                            <a th:href="@{'/index?page='+${pagination.totalPage}}"  aria-label="Next">
+                            <a th:href="@{'/?page='+${pagination.totalPage}}"  aria-label="Next">
                                 <span aria-hidden="true">&gt;&gt;</span>
                             </a>
                         </li>

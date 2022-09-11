@@ -7,11 +7,10 @@ package com.lin.communityproject.controller;
  */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.lin.communityproject.dto.CommentDTO;
@@ -51,15 +50,29 @@ public class CommentController {
     }
 
     /**
-     * 显示二级评论
-     * @param id     一级评论id
-     * @param model
+     * 获取到二级评论内容
+     * @param
      * @return
      */
-    @RequestMapping(value = "/comment/{id}",method = RequestMethod.GET)
-    public Object subComment(@PathVariable("id")Integer id,Model model){
-        List<CommentDTO> subComm = commentService.getCommentsQues(id, CommentType.COMMENT_TYPE);
-        model.addAttribute("subComm",subComm);
-        return null;
+    @GetMapping("/comment")
+    public ResultCodeDTO getSubComm(@RequestParam("parentId")Integer parentId,@RequestParam("questionId")Integer questionId){
+        if(parentId == null){
+            return ResultCodeDTO.resultOf(CustomizeErrorCode.Comment_Not_Fount);
+        }
+        //id:一级评论的id
+        List<CommentDTO> comments = commentService.getComments(parentId, CommentType.COMMENT_TYPE);
+        return ResultCodeDTO.resultOf(comments);
+    }
+
+
+    @GetMapping("incrCommLike")
+    public ResultCodeDTO incrCommLike(@RequestParam Integer id)
+    {
+        if(id==null){
+            return  ResultCodeDTO.resultOf(CustomizeErrorCode.Comment_Not_Fount);
+        }
+        commentService.incrCommLike(id);
+        CommentDTO dto1=commentService.getCommentById(id);
+        return ResultCodeDTO.resultOf(dto1);
     }
 }

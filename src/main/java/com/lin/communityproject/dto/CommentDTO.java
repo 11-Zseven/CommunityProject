@@ -14,6 +14,7 @@ public class CommentDTO {
     private Integer commenter;
     private String comment;
     private Integer likeCount;
+    private Integer commentCount;
     private UserDTO commenterDetail;
     public Integer getId() {
         return id;
@@ -70,5 +71,12 @@ public class CommentDTO {
     }
     public void setCommenterDetail(UserDTO commenterDetail) {
         this.commenterDetail = commenterDetail;
+    }
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+    public void setCommentCount(Integer commentCount) {
+        if(commentCount==null) this.commentCount=0;
+        else this.commentCount = commentCount;
     }
 }

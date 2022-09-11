@@ -88,7 +88,7 @@ public class PublishController {
         QuestionDTO dto=questionService.getQuesById(id);
         model.addAttribute("questionById",dto);
         //除了问题本身的话，还有该问题的评论列表
-        List<CommentDTO> commentsQues = commentService.getCommentsQues(id, CommentType.Question_TYPE);
+        List<CommentDTO> commentsQues = commentService.getComments(id, CommentType.Question_TYPE);
         model.addAttribute("commentsQues",commentsQues);
         return "question";
     }

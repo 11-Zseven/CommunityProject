@@ -13,7 +13,7 @@ public interface QuestionMapper {
     @Select("select id,title,content,tag,create_time,modified_time,creator,comment_count,view_count,like_count from question")
     List<QuestionEntity> getAll();
 
-    @Select("select id,title,content,tag,create_time,modified_time,creator,comment_count,view_count,like_count from question limit #{offset},#{size}")
+    @Select("select id,title,content,tag,create_time,modified_time,creator,comment_count,view_count,like_count from question limit #{offset},#{size} order by id desc")
     List<QuestionEntity> getQuesByPage(@Param("offset") Integer offset, @Param("size") Integer size);
 
     @Select("select count(*) from question")
